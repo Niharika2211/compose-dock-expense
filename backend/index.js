@@ -5,8 +5,9 @@ const cors = require('cors');
 const os = require('os');
 const fetch = require('node-fetch');
 const moment = require('moment');
+
 const app = express();
-const port = 8080;
+const port = 8081;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -21,7 +22,7 @@ app.get('/health',(req,res)=>{
 });
 
 // ADD TRANSACTION
-app.post('/transaction', (req,res)=>{
+app.post('/api/transaction', (req,res)=>{
     var response = "";
     try{
         t=moment().unix()
@@ -34,7 +35,7 @@ app.post('/transaction', (req,res)=>{
 });
 
 // GET ALL TRANSACTIONS
-app.get('/transaction',(req,res)=>{
+app.get('/api/transaction',(req,res)=>{
     try{
         var transactionList = [];
        transactionService.getAllTransactions(function (results) {
@@ -54,7 +55,8 @@ app.get('/transaction',(req,res)=>{
 });
 
 //DELETE ALL TRANSACTIONS
-app.delete('/transaction',(req,res)=>{
+app.delete('/api/transaction',(req,res)=>{
+    console.log('in delete method');
     try{
         transactionService.deleteAllTransactions(function(result){
             t=moment().unix()
@@ -68,7 +70,7 @@ app.delete('/transaction',(req,res)=>{
 });
 
 //DELETE ONE TRANSACTION
-app.delete('/transaction/id', (req,res)=>{
+app.delete('/api/transaction/id', (req,res)=>{
     try{
         //probably need to do some kind of parameter checking
         transactionService.deleteTransactionById(req.body.id, function(result){
@@ -81,7 +83,7 @@ app.delete('/transaction/id', (req,res)=>{
 });
 
 //GET SINGLE TRANSACTION
-app.get('/transaction/id',(req,res)=>{
+app.get('/api/transaction/id',(req,res)=>{
     //also probably do some kind of parameter checking here
     try{
         transactionService.findTransactionById(req.body.id,function(result){

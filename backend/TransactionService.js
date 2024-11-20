@@ -13,7 +13,7 @@ function addTransaction(amount,desc){
     con.query(mysql, function(err,result){
         if (err) throw err;
         //console.log("Adding to the table should have worked");
-    }) 
+    });
     return 200;
 }
 
@@ -32,7 +32,7 @@ function findTransactionById(id,callback){
         if (err) throw err;
         console.log(`retrieving transactions with id ${id}`);
         return(callback(result));
-    }) 
+    });
 }
 
 function deleteAllTransactions(callback){
