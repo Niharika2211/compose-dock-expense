@@ -10,4 +10,4 @@ COPY public/ ./public
 RUN npm install --production
 USER expense
 EXPOSE 3000
-CMD ["sleep", "2000"]
+CMD ["npm", "start"]
