@@ -13,6 +13,12 @@ services:
       - db_data:/var/lib/mysql
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
   backend:
     image: backend:v1
@@ -23,19 +29,31 @@ services:
       DB_PWD: ExpenseApp@1
       DB_DATABASE: transactions
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - expense
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   frontend:
     image: frontend:v1
     container_name: frontend
     ports:
-      - "80:80"
+      - "80:80" # Expose the frontend on port 80
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - expense
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 networks:
   expense:
