@@ -43,7 +43,7 @@ services:
     image: frontend:v1
     container_name: frontend
     ports:
-      - "80:80" # Expose the frontend on port 80
+      - "80:80"
     depends_on:
       backend:
         condition: service_healthy
