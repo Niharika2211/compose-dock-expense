@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const os = require('os');
 const fetch = require('node-fetch');
-const moment = require('moment');
+
 
 const app = express();
 const port = 8080;
@@ -13,8 +13,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-// ROUTES FOR OUR API
-// =======================================================
+
+app.use(cors({
+    origin: 'http://expense-s3-cors.s3-website.ap-south-1.amazonaws.com',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true 
+}));
+
+
+
 
 //Health Checking
 app.get('/health',(req,res)=>{
