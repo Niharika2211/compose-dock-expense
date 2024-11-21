@@ -1,0 +1,45 @@
+services:
+  mysql:
+    image: mysql:v1
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ExpenseApp@1
+      MYSQL_USER: expense
+      MYSQL_PASSWORD: ExpenseApp@1
+      MYSQL_DATABASE: transactions
+    networks:
+      - expense
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  backend:
+    image: backend:v1
+    container_name: backend
+    environment:
+      DB_HOST: mysql
+      DB_USER: expense
+      DB_PWD: ExpenseApp@1
+      DB_DATABASE: transactions
+    depends_on:
+      - mysql
+    networks:
+      - expense
+
+  frontend:
+    image: frontend:v1
+    container_name: frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - expense
+
+networks:
+  expense:
+    driver: bridge
+
+volumes:
+  db_data:
