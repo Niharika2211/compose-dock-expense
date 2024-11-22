@@ -1,0 +1,6 @@
+services:
+  mysql:
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    image: mysql:v1
