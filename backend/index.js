@@ -21,8 +21,7 @@ app.use(cors({
     credentials: true 
 }));
 
-
-
+app.listen(8080, () => console.log("Backend running"));
 
 //Health Checking
 app.get('/health',(req,res)=>{
