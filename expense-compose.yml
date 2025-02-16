@@ -1,65 +1,32 @@
+name: expense
+networks:
+  default:
+    name: expense
+volumes:
+  mysql:
 services:
   mysql:
     image: mysql:v1
     container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ExpenseApp@1
-      MYSQL_USER: expense
-      MYSQL_PASSWORD: ExpenseApp@1
-      MYSQL_DATABASE: transactions
-    networks:
-      - expense
+      - MYSQL_ROOT_PASSWORD=ExpenseApp@1
+      - MYSQL_USER=expense
+      - MYSQL_PASSWORD=ExpenseApp@1
+      - MYSQL_DATABASE=transactions
     volumes:
-      - db_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+    - source: mysql
+      target: /var/lib/mysql
+      type: volume
   backend:
     image: backend:v1
     container_name: backend
-    environment:
-      DB_HOST: mysql
-      DB_USER: expense
-      DB_PWD: ExpenseApp@1
-      DB_DATABASE: transactions
-    depends_on:
-      mysql:
-        condition: service_healthy
-    networks:
-      - expense
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 20s
-    restart: on-failure
-
+    command: sh -c "sleep 20 && node /opt/server/index.js"
+    depends_on: 
+    - mysql
   frontend:
     image: frontend:v1
     container_name: frontend
-    ports:
-      - "80:80"
     depends_on:
-      backend:
-        condition: service_healthy
-    networks:
-      - expense
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 20s
-    restart: on-failure
-
-networks:
-  expense:
-    driver: bridge
-
-volumes:
-  db_data:
+    - backend
+    ports:
+    - "80:80"
