@@ -8,29 +8,25 @@ aws ecs register-task-definition \
     --execution-role-arn arn:aws:iam::522814728660:role/ecsTaskExecutionRole1 \
     --container-definitions '[
         {
-            "name": "shipping",
-            "image": "siva9666/shipping-instana:v1",
+            "name": "backend-node",
+            "image": "siva9666/expense-backend:node",
             "essential": true,
             "environment": [
                 {
                     "name": "DB_HOST",
-                    "value": "mysql.instana"
-                },
-                {
-                    "name": "DB_PORT",
-                    "value": "3306"
+                    "value": "test-db.konkas.tech"
                 },
                 {
                     "name": "DB_USER",
-                    "value": "shipping" 
+                    "value": "expense" 
                 },
                 {
                     "name": "DB_PASSWD",
-                    "value": "RoboShop@1"
+                    "value": "ExpenseApp@1"
                 },
                 {
-                    "name": "CART_ENDPOINT",
-                    "value": "cart.instana:8080"
+                    "name": "DB_DATABASE",
+                    "value": "transactions"
                 }
             ],
             "portMappings": [
@@ -42,7 +38,7 @@ aws ecs register-task-definition \
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
-                    "awslogs-group": "/ecs/shipping",
+                    "awslogs-group": "/ecs/siva-node-backend",
                     "awslogs-region": "us-east-1",
                     "awslogs-stream-prefix": "ecs"
                 }

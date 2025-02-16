@@ -8,8 +8,8 @@ aws ecs register-task-definition \
     --execution-role-arn arn:aws:iam::522814728660:role/ecsTaskExecutionRole1 \
     --container-definitions '[
         {
-            "name": "web",
-            "image": "siva9666/web-instana:ecs",
+            "name": "frontend-node",
+            "image": "siva9666/expense-frontend:node",
             "essential": true,
             "portMappings": [
                 {
