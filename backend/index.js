@@ -12,12 +12,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // CORS Configuration
-app.use(cors({
-    origin: 'http://expense-s3-cors.s3-website.ap-south-1.amazonaws.com',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-}));
+// app.use(cors({
+//     origin: 'http://expense-s3-cors.s3-website.ap-south-1.amazonaws.com',
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//     credentials: true
+// }));
+
+app.use(cors());
+
 // Health Check
 app.get('/health', (req, res) => {
     res.json("This is the health check");
