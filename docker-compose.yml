@@ -23,8 +23,8 @@ services:
       - DB_USER=expense
       - DB_PWD=ExpenseApp@1
       - DB_DATABASE=transactions
-    depends_on:
-      - mysql
+    # depends_on:
+    #   - mysql
     restart: on-failure
     networks:
       - expense
