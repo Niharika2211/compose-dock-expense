@@ -1,6 +1,0 @@
-services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    image: backend:v1
