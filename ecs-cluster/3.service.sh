@@ -1,16 +1,31 @@
 #!/bin/bash
 
+# Function to fetch Cloud Map service ARNs dynamically
+fetch_service_arn() {
+    local service_name=$1
+    aws servicediscovery list-services --query "Services[?Name=='$service_name'].Arn" --output text
+}
+
 # Function to create ECS services
 create_services() {
     echo "Creating ECS services..."
 
+    # Fetch Cloud Map service ARNs dynamically for backend-node and frontend-node
+    backend_service_arn=$(fetch_service_arn "backend-node")
+    frontend_service_arn=$(fetch_service_arn "frontend-node")
+
+    if [[ -z "$backend_service_arn" || -z "$frontend_service_arn" ]]; then
+        echo "❌ Error: Failed to fetch Cloud Map service ARNs"
+        exit 1
+    fi
+
     services=(
-        "backend-node-service expense-backend"
-        "frontend-node-service expense-frontend"
+        "backend-node-service expense-backend $backend_service_arn"
+        "frontend-node-service expense-frontend $frontend_service_arn"
     )
 
     for service in "${services[@]}"; do
-        read -r service_name task_definition <<< "$service"
+        read -r service_name task_definition service_registry <<< "$service"
         echo "Creating service: $service_name"
 
         aws ecs create-service \
@@ -19,7 +34,8 @@ create_services() {
             --task-definition "$task_definition" \
             --desired-count 1 \
             --launch-type FARGATE \
-            --network-configuration "awsvpcConfiguration={subnets=[subnet-01899a28d9cd091c2],securityGroups=[sg-0c2026150f42233ac],assignPublicIp=ENABLED}"
+            --network-configuration "awsvpcConfiguration={subnets=[subnet-01899a28d9cd091c2],securityGroups=[sg-0c2026150f42233ac],assignPublicIp=ENABLED}" \
+            --service-registries "registryArn=$service_registry"
 
         if [[ $? -ne 0 ]]; then
             echo "❌ Error: Failed to create service $service_name"
