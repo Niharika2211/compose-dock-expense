@@ -27,7 +27,7 @@ app.get('/health', (req, res) => {
 });
 
 // Add Transaction
-app.post('/api/transaction', (req, res) => {
+app.post('/transaction', (req, res) => {
     try {
         const timestamp = moment().unix();
         console.log(`{ "timestamp": ${timestamp}, "msg": "Adding Expense", "amount": ${req.body.amount}, "Description": "${req.body.desc}" }`);
@@ -45,7 +45,7 @@ app.post('/api/transaction', (req, res) => {
 });
 
 // Get All Transactions
-app.get('/api/transaction', (req, res) => {
+app.get('/transaction', (req, res) => {
     try {
         transactionService.getAllTransactions((results) => {
             const transactionList = results.map(row => ({
@@ -66,7 +66,7 @@ app.get('/api/transaction', (req, res) => {
 });
 
 // Delete All Transactions
-app.delete('/api/transaction', (req, res) => {
+app.delete('/transaction', (req, res) => {
     try {
         transactionService.deleteAllTransactions(() => {
             const timestamp = moment().unix();
@@ -80,7 +80,7 @@ app.delete('/api/transaction', (req, res) => {
 });
 
 // Delete One Transaction
-app.delete('/api/transaction/:id', (req, res) => {
+app.delete('/transaction/:id', (req, res) => {
     try {
         const { id } = req.params;
 
@@ -93,7 +93,7 @@ app.delete('/api/transaction/:id', (req, res) => {
 });
 
 // Get Single Transaction
-app.get('/api/transaction/:id', (req, res) => {
+app.get('/transaction/:id', (req, res) => {
     try {
         const { id } = req.params;
 
