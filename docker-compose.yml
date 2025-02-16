@@ -1,25 +1,25 @@
 services:
-  mysql:
-    image: mysql:v1
-    container_name: mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=ExpenseApp@1
-      - MYSQL_USER=expense
-      - MYSQL_PASSWORD=ExpenseApp@1
-      - MYSQL_DATABASE=transactions
-    volumes:
-      - source: mysql
-        target: /var/lib/mysql
-        type: volume
-    restart: on-failure
-    networks:
-      - expense
+  # mysql:
+  #   image: mysql:v1
+  #   container_name: mysql
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=ExpenseApp@1
+  #     - MYSQL_USER=expense
+  #     - MYSQL_PASSWORD=ExpenseApp@1
+  #     - MYSQL_DATABASE=transactions
+  #   volumes:
+  #     - source: mysql
+  #       target: /var/lib/mysql
+  #       type: volume
+  #   restart: on-failure
+  #   networks:
+  #     - expense
 
   backend:
     image: siva9666/expense-backend:node
     container_name: backend
     environment:
-      - DB_HOST=mysql
+      - DB_HOST=test-db.konkas.tech
       - DB_USER=expense
       - DB_PWD=ExpenseApp@1
       - DB_DATABASE=transactions
