@@ -26,3 +26,4 @@ aws ecs register-task-definition \
                 }
             }
         }
+    ]'
