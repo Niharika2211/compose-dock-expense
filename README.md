@@ -33,7 +33,6 @@ docker run --rm -itd --name backend \
  -e DB_USER=expense \
  -e DB_PWD=ExpenseApp@1 \
  -e DB_DATABASE=transactions \
- -p 8080:8080 \
  --network expense backend:v1
 ```
 
