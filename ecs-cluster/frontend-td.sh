@@ -9,7 +9,7 @@ aws ecs register-task-definition \
     --container-definitions '[
         {
             "name": "frontend-node",
-            "image": "siva9666/expense-frontend:node",
+            "image": "siva9666/expense-frontend:node-ecs",
             "essential": true,
             "portMappings": [
                 {
