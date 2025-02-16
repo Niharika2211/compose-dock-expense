@@ -43,13 +43,13 @@ aws elbv2 create-listener \
 echo "✅ HTTP Listener created with redirect to HTTPS for Load Balancer ARN: $LOAD_BALANCER_ARN"
 
 # Create HTTPS Listener with SSL Termination
-aws elbv2 create-listener \
+LISTENER_ARN_HTTPS=$(aws elbv2 create-listener \
     --load-balancer-arn $LOAD_BALANCER_ARN \
     --protocol HTTPS \
     --port 443 \
     --default-actions Type=forward,TargetGroupArn=$TARGET_GROUP_ARN \
     --certificates CertificateArn=arn:aws:acm:us-east-1:522814728660:certificate/903d653b-c49e-4b28-9cb3-795b477042ea \
-    --ssl-policy ELBSecurityPolicy-2016-08
+    --ssl-policy ELBSecurityPolicy-2016-08)
 
 echo "✅ HTTPS Listener created for Load Balancer ARN: $LOAD_BALANCER_ARN"
 
