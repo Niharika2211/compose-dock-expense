@@ -25,6 +25,12 @@ create_services() {
             echo "❌ Error: Failed to create service $service_name"
             exit 1
         fi
+
+        # Wait for 15 seconds after deploying the backend service
+        if [[ "$service_name" == "backend-node-service" ]]; then
+            echo "⏳ Waiting for 15 seconds to let the backend service stabilize..."
+            sleep 15
+        fi
     done
 
     echo "✅ ECS services created successfully!"
