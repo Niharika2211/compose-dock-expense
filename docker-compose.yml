@@ -16,7 +16,7 @@ services:
       - expense
 
   backend:
-    image: siva9666/expense-node-backend:v1
+    image: siva9666/expense-backend:node
     container_name: backend
     environment:
       - DB_HOST=mysql
@@ -30,7 +30,7 @@ services:
       - expense
 
   frontend:
-    image: siva9666/expense-node-frontend:v1
+    image: siva9666/expense-frontend:node
     container_name: frontend
     depends_on:
       - backend

@@ -9,10 +9,10 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: siva9666/expense-node-backend:v1
+    image: siva9666/expense-backend:node
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: siva9666/expense-node-frontend:v1
+    image: siva9666/expense-frontend:node
