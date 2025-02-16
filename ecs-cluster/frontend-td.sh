@@ -1,6 +1,6 @@
 #!/bin/bash
 aws ecs register-task-definition \
-    --family web \
+    --family expense-frontend \
     --network-mode awsvpc \
     --requires-compatibilities FARGATE \
     --cpu "256" \
