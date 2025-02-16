@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   mysql:
     image: mysql:v1
@@ -38,6 +39,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    restart: on-failure
 
   frontend:
     image: frontend:v1
@@ -54,6 +56,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    restart: on-failure
 
 networks:
   expense:
