@@ -14,7 +14,7 @@ install_or_upgrade() {
     fi
 }
 
-NAMESPACE="expense-helm"
+NAMESPACE="expense"
 
 install_or_upgrade "backend" "." "dev/backend.yaml" "$NAMESPACE"
 install_or_upgrade "frontend" "." "dev/frontend.yaml" "$NAMESPACE"
