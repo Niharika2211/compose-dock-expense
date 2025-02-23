@@ -20,7 +20,7 @@
     "winston": "^3.11.0",
     "opentracing": "0.14.7",
     "jaeger-client": "^3.19.0",
-    "express-opentracing": "^0.2.0",
+    "express-opentracing": "0.1.1",
     "response-time": "^2.3.2"
   }
 }
