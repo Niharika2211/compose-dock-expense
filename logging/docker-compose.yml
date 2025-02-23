@@ -1,0 +1,54 @@
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node  # Single-node cluster
+      - xpack.security.enabled=false  # Disable security for simplicity
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m  # Adjust memory limits
+    volumes:
+      - es-data:/usr/share/elasticsearch/data  # Persist data
+    ports:
+      - "9200:9200"  # Elasticsearch HTTP API
+      - "9300:9300"  # Elasticsearch transport
+    networks:
+      - expense
+    restart: unless-stopped
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.13.4
+    container_name: logstash
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf  # Logstash config
+      - logstash-data:/usr/share/logstash/data  # Persist Logstash data
+    ports:
+      - "5044:5044"  # Beats input (e.g., Filebeat)
+      - "9600:9600"  # Logstash monitoring API
+    environment:
+      - LS_JAVA_OPTS=-Xms256m -Xmx256m  # Adjust memory limits
+    depends_on:
+      - elasticsearch
+    networks:
+      - expense
+    restart: unless-stopped
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.4
+    container_name: kibana
+    ports:
+      - "5601:5601"  # Kibana UI
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200  # Connect to Elasticsearch
+    depends_on:
+      - elasticsearch
+    networks:
+      - expense
+    restart: unless-stopped
+
+networks:
+  expense:
+    driver: bridge
+
+volumes:
+  es-data:
+  logstash-data:
