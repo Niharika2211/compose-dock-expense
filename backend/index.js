@@ -522,7 +522,6 @@ const moment = require('moment');
 const promClient = require('prom-client');
 const winston = require('winston');
 const { initTracer, opentracing } = require('jaeger-client');
-const expressOpentracing = require('express-opentracing').default;
 const responseTime = require('response-time');
 
 const app = express();
@@ -624,4 +623,147 @@ app.get('/metrics', async (req, res) => {
         res.end(metrics);
     } catch (err) {
         logger.error({ message: 'Error serving metrics', error: err.message });
-        span.log({ event
+        span.log({ event: 'error', message: err.message });
+        span.setTag('error', true);
+        res.status(500).end('Error serving metrics');
+    } finally {
+        span.finish();
+    }
+});
+
+// Add Transaction
+app.post('/transaction', async (req, res) => {
+    const span = tracer.startSpan('add_transaction');
+    try {
+        const timestamp = moment().unix();
+        logger.info({
+            timestamp,
+            msg: 'Adding Expense',
+            amount: req.body.amount,
+            description: req.body.desc,
+        });
+
+        const success = transactionService.addTransaction(req.body.amount, req.body.desc);
+        span.setTag('amount', req.body.amount);
+        span.setTag('description', req.body.desc);
+
+        if (success === 200) {
+            transactionAddedCounter.inc({ status: 'success' });
+            span.setTag('success', true);
+            res.json({ message: 'Transaction added successfully' });
+        } else {
+            transactionAddedCounter.inc({ status: 'failed' });
+            span.setTag('success', false);
+            res.status(500).json({ message: 'Failed to add transaction' });
+        }
+    } catch (err) {
+        transactionAddedCounter.inc({ status: 'error' });
+        span.log({ event: 'error', message: err.message });
+        span.setTag('error', true);
+        res.status(500).json({ message: 'Something went wrong', error: err.message });
+    } finally {
+        span.finish();
+    }
+});
+
+// Get All Transactions
+app.get('/transaction', async (req, res) => {
+    const span = tracer.startSpan('get_all_transactions');
+    try {
+        const results = await promisifyTransactionService(transactionService.getAllTransactions);
+        const transactionList = results.map(row => ({
+            id: row.id,
+            amount: row.amount,
+            description: row.description
+        }));
+
+        const timestamp = moment().unix();
+        logger.info({ timestamp, msg: 'Getting All Expenses', expenses: transactionList });
+        span.setTag('transaction_count', transactionList.length);
+
+        res.status(200).json({ result: transactionList });
+    } catch (err) {
+        span.log({ event: 'error', message: err.message });
+        span.setTag('error', true);
+        res.status(500).json({ message: 'Could not get all transactions', error: err.message });
+    } finally {
+        span.finish();
+    }
+});
+
+// Delete All Transactions
+app.delete('/transaction', async (req, res) => {
+    const span = tracer.startSpan('delete_all_transactions');
+    try {
+        await promisifyTransactionService(transactionService.deleteAllTransactions);
+        const timestamp = moment().unix();
+        logger.info({ timestamp, msg: 'Deleted All Expenses' });
+        span.setTag('success', true);
+
+        res.status(200).json({ message: 'All transactions deleted successfully' });
+    } catch (err) {
+        span.log({ event: 'error', message: err.message });
+        span.setTag('error', true);
+        res.status(500).json({ message: 'Deleting all transactions failed', error: err.message });
+    } finally {
+        span.finish();
+    }
+});
+
+// Delete One Transaction
+app.delete('/transaction/:id', async (req, res) => {
+    const span = tracer.startSpan('delete_transaction_by_id');
+    const { id } = req.params;
+    span.setTag('transaction_id', id);
+
+    try {
+        await promisifyTransactionService(transactionService.deleteTransactionById, id);
+        logger.info({ msg: `Deleted transaction with ID ${id}` });
+        span.setTag('success', true);
+
+        res.status(200).json({ message: `Transaction with ID ${id} deleted successfully` });
+    } catch (err) {
+        span.log({ event: 'error', message: err.message });
+        span.setTag('error', true);
+        res.status(500).json({ message: 'Error deleting transaction', error: err.message });
+    } finally {
+        span.finish();
+    }
+});
+
+// Get Single Transaction
+app.get('/transaction/:id', async (req, res) => {
+    const span = tracer.startSpan('get_transaction_by_id');
+    const { id } = req.params;
+    span.setTag('transaction_id', id);
+
+    try {
+        const result = await promisifyTransactionService(transactionService.findTransactionById, id);
+        if (result.length > 0) {
+            const transaction = {
+                id: result[0].id,
+                amount: result[0].amount,
+                desc: result[0].desc
+            };
+            logger.info({ msg: `Retrieved transaction with ID ${id}`, transaction });
+            span.setTag('found', true);
+
+            res.status(200).json(transaction);
+        } else {
+            span.setTag('found', false);
+            res.status(404).json({ message: 'Transaction not found' });
+        }
+    } catch (err) {
+        span.log({ event: 'error', message: err.message });
+        span.setTag('error', true);
+        res.status(500).json({ message: 'Error retrieving transaction', error: err.message });
+    } finally {
+        span.finish();
+    }
+});
+
+// Start Server
+app.listen(port, () => {
+    const timestamp = moment().unix();
+    logger.info({ timestamp, msg: `App Started on Port ${port}` });
+});
