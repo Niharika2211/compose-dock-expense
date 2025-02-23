@@ -54,6 +54,7 @@ services:
     networks:
       - expense
     restart: on-failure
+    
   jaeger:
     image: jaegertracing/all-in-one:latest
     container_name: jaeger
