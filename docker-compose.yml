@@ -1,6 +1,6 @@
 services:
   backend:
-    image: siva9666/expense-backend:node
+    image: backend:v1
     container_name: backend
     environment:
       - DB_HOST=test-db.konkas.tech
