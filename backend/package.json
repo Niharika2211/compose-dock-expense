@@ -15,6 +15,12 @@
     "express": "^4.17.1",
     "mysql2": "latest",
     "node-fetch": "^2.6.1",
-    "moment" : "latest"
+    "moment" : "latest",
+    "prom-client": "^14.2.0",
+    "winston": "^3.11.0",
+    "@opentracing": "^0.14.7",
+    "jaeger-client": "^3.19.0",
+    "express-opentracing": "^0.2.0",
+    "response-time": "^2.3.2"
   }
 }
