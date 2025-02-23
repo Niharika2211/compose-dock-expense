@@ -1,17 +1,17 @@
-version: '3.8'
-
 services:
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus  # Added volume for TSDB storage
     ports:
       - "9090:9090"
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
     networks:
-      - monitoring
+      - expense
+    restart: on-failure
 
   grafana:
     image: grafana/grafana:latest
@@ -19,13 +19,14 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin  # Change this in production
     volumes:
-      - grafana-data:/var/lib/grafana
+      - grafana-data:/var/lib/grafana  # Kept for dashboards/settings
     depends_on:
       - prometheus
     networks:
-      - monitoring
+      - expense
+    restart: on-failure
 
   nginx-exporter:
     image: nginx/nginx-prometheus-exporter:latest
@@ -38,10 +39,12 @@ services:
       - prometheus
     networks:
       - expense
+    restart: on-failure
 
 networks:
-  monitoring:
+  expense:  # Aligned network name with your services
     driver: bridge
 
 volumes:
-  grafana-data:
+  prometheus-data:  # Added for Prometheus TSDB
+  grafana-data:     # Kept for Grafana persistence
