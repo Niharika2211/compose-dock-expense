@@ -26,7 +26,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=ExpenseApp@1
     restart: on-failure
-    network:
+    networks:
       - compose-expense
 networks:
   compose-expense:
