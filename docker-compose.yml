@@ -9,8 +9,7 @@ services:
       - DB_DATABASE=transactions
     restart: on-failure
     networks:
-      - expense
-
+      - compose-expense
   frontend:
     image: siva9666/expense-frontend:node
     container_name: frontend
@@ -20,7 +19,15 @@ services:
       - "80:80"
     restart: on-failure
     networks:
-      - expense
+      - compose-expense
+  mysql:
+    image: siva9666/expense-mysql:node
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=ExpenseApp@1
+    restart: on-failure
+    network:
+      - compose-expense
 networks:
-  expense:
+  compose-expense:
     driver: bridge
