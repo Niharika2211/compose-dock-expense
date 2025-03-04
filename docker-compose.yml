@@ -1,9 +1,9 @@
 services:
   backend:
     image: backend:v1
-    container_name: backend
+    container_name: siva9666/expense-backend:node 
     environment:
-      - DB_HOST=test-db.konkas.tech
+      - DB_HOST=mysql
       - DB_USER=expense
       - DB_PWD=ExpenseApp@1
       - DB_DATABASE=transactions
