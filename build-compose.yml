@@ -10,3 +10,9 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     image: siva9666/expense-frontend:node
+  
+  mysql:
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    image: siva9666/expense-mysql:node
