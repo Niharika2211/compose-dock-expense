@@ -1,7 +1,7 @@
 services:
   backend:
-    image: backend:v1
-    container_name: siva9666/expense-backend:node 
+    image: siva9666/expense-backend:node 
+    container_name: backend 
     environment:
       - DB_HOST=mysql
       - DB_USER=expense
