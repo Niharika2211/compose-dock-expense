@@ -3,16 +3,16 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: siva9666/expense-backend:node
+    image: mini/expense-backend:node
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: siva9666/expense-frontend:node
+    image: mini/expense-frontend:node
   
   mysql:
     build:
       context: ./mysql
       dockerfile: Dockerfile
-    image: siva9666/expense-mysql:node
+    image: mini/expense-mysql:node
