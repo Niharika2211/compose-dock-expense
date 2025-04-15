@@ -2,17 +2,14 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
     image: mini/expense-backend:node
 
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
     image: mini/expense-frontend:node
   
   mysql:
     build:
       context: ./mysql
-      dockerfile: Dockerfile
     image: mini/expense-mysql:node
