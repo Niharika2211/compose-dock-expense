@@ -19,7 +19,7 @@ docker run --rm -dit --name debug --network expense siva9666/debug-utility:v1
 ```
 
 ```bash
-docker run --rm -itd --name mysql \
+docker run --rm -it --name mysql \
  -e MYSQL_ROOT_PASSWORD=ExpenseApp@1 \
  -e MYSQL_USER=expense \
  -e MYSQL_PASSWORD=ExpenseApp@1 \
@@ -28,7 +28,7 @@ docker run --rm -itd --name mysql \
 ```
 
 ```bash
-docker run --rm -itd --name backend \
+docker run --rm -it --name backend \
  -e DB_HOST=mysql \
  -e DB_USER=expense \
  -e DB_PWD=ExpenseApp@1 \
@@ -37,7 +37,7 @@ docker run --rm -itd --name backend \
 ```
 
 ```bash
-docker run --rm -itd --name frontend -p 80:80 --network expense frontend:v1
+docker run --rm -it --name frontend -p 80:80 --network expense frontend:v1
 ```
 
 ```bash
